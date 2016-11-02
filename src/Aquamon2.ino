@@ -1,4 +1,3 @@
-//testing use of github
 #include <Arduino.h>
 
 /* RFM69 library and code by Felix Rusu - felix@lowpowerlab.com
@@ -32,7 +31,7 @@ Aquamon
 #define RFM69_IRQN    3  // Pin 3 is IRQ 3!
 #define RFM69_RST     4
 
-/*Feather m0 w/wing
+/*Feather m0 w/wing 
 #define RFM69_RST     11   // "A"
 #define RFM69_CS      10   // "B"
 #define RFM69_IRQ     6    // "D"
@@ -51,7 +50,7 @@ void setup() {
   Serial.begin(SERIAL_BAUD);
 
   Serial.println("Feather RFM69HCW Transmitter");
-
+  
   // Hard Reset the RFM module
   pinMode(RFM69_RST, OUTPUT);
   digitalWrite(RFM69_RST, HIGH);
@@ -65,9 +64,9 @@ void setup() {
     radio.setHighPower();    // Only for RFM69HCW & HW!
   }
   radio.setPowerLevel(31); // power output ranges from 0 (5dBm) to 31 (20dBm)
-
+  
   radio.encrypt(ENCRYPTKEY);
-
+  
   pinMode(LED, OUTPUT);
   Serial.print("\nTransmitting at ");
   Serial.print(FREQUENCY==RF69_433MHZ ? 433 : FREQUENCY==RF69_868MHZ ? 868 : 915);
@@ -85,7 +84,7 @@ void loop() {
   byte data[12];
   byte addr[8];
   float celsius, fahrenheit;
-
+  
 
   if ( !ds.search(addr)) {
     Serial.println("No more addresses.");
@@ -94,7 +93,7 @@ void loop() {
     delay(250); //Delay in cycles between temperature reads.
     return;
   }
-
+  
   Serial.print("ROM =");
   String ROM ="ROM";
   for( i = 0; i < 8; i++) {
@@ -103,13 +102,13 @@ void loop() {
     ROM = ROM+(addr[i]);
   }
 
-
+  
   if (OneWire::crc8(addr, 7) != addr[7]) {
       Serial.println("CRC is not valid!");
       return;
   }
   Serial.println();
-
+ 
   // the first ROM byte indicates which chip
   switch (addr[0]) {
     case 0x10:
@@ -127,17 +126,17 @@ void loop() {
     default:
       Serial.println("Device is not a DS18x20 family device.");
       return;
-  }
+  } 
 
   ds.reset();
   ds.select(addr);
   ds.write(0x44, 1);        // start conversion, with parasite power on at the end
-
+  
   delay(1000);     // maybe 750ms is enough, maybe not
   // we might do a ds.depower() here, but the reset will take care of it.
-
+  
   present = ds.reset();
-  ds.select(addr);
+  ds.select(addr);    
   ds.write(0xBE);         // Read Scratchpad
 
   Serial.print("  Data = ");
@@ -187,17 +186,17 @@ void loop() {
   char radiopacket[20];
   dtostrf(celsius, 5,2,radiopacket); // HERE IS THE RADIOPACKET - NEED TO ADD IN ROM, THIS JUST CONVERTS FROM FLOT TO CHAR
 
-
+  
   Serial.println(radiopacket);
-
+  
 //TRANSMISSION
-
+  
   delay(1000);  // Wait 1 second between transmits, could also 'sleep' here!
-
+  
   //char radiopacket[20] = "Temperature ";
   //itoa(celsius, radiopacket+12, 10);
   Serial.print("Sending "); Serial.println(radiopacket);
-
+    
   if (radio.sendWithRetry(RECEIVER, radiopacket, strlen(radiopacket))) { //target node Id, message as string or byte array, message length
     Serial.println("OK");
     Blink(LED, 50, 3); //blink LED 3 times, 50ms between blinks
