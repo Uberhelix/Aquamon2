@@ -42,7 +42,6 @@
 */
 
 #define LED           13  // onboard blinky
-int numofsensors = 2 // The number of sensors which will send results to the radiopacket.
 
 int16_t packetnum = 0;  // packet counter, we increment per xmission
 
@@ -188,21 +187,23 @@ void loop() {
   Serial.print(fahrenheit);
   Serial.println(" Fahrenheit");
 
-  //NEED TO ADD IN RADIO NODE AND GET THIS IN A PROPER POSITION IN THE LOOP FOR EACH SENSOR.
-  String toradiopacket = ROM +"="+= celsius;
-  Serial.println(toradiopacket);
+//Building pre-radiopacket
+  String radheader = "NetworkID=";
+  radheader.concat(NETWORKID);
+  radheader.concat("%NodeId=");
+  radheader.concat(NODEID)+"%";
+  String toradiopacket = radheader+"%Sensor="+ROM+"%"+"Data="+= celsius;
 
- //NEED TO REPLACE THIS WITH NEW RADIOPACKET
-  char radiopacket[20];
-  dtostrf(celsius, 5,2,radiopacket); // HERE IS THE RADIOPACKET - NEED TO ADD IN ROM, THIS JUST CONVERTS FROM FLOT TO CHAR
+//Building radiopacket
+  int rpacketlen = toradiopacket.length()+1;
+  char radiopacket[rpacketlen];
+  toradiopacket.toCharArray(radiopacket,rpacketlen);
 
   Serial.println(radiopacket);
 
 //TRANSMISSION
   delay(1000);  // Wait 1 second between transmits, could also 'sleep' here!
 
-  //char radiopacket[20] = "Temperature ";
-  //itoa(celsius, radiopacket+12, 10);
   Serial.print("Sending "); Serial.println(radiopacket);
 
   if (radio.sendWithRetry(RECEIVER, radiopacket, strlen(radiopacket))) { //target node Id, message as string or byte array, message length
