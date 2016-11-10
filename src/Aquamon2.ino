@@ -46,8 +46,12 @@
 int16_t packetnum = 0;  // packet counter, we increment per xmission
 
 RFM69 radio = RFM69(RFM69_CS, RFM69_IRQ, IS_RFM69HCW, RFM69_IRQN);
+
+// For Onewire
 OneWire  ds(10);  // on pin 10 (a 4.7K resistor is necessary)
 
+//For photoresistor
+int lightPin = A1;
 
 
 void setup() { // Setup, mostly radio stuff
@@ -81,7 +85,7 @@ void setup() { // Setup, mostly radio stuff
 }
 
 void loop() {
-
+// <Insert> and transmit photoresistor read once trasmit radiopacket function is in place. analogRead(lightPin)
 // TEMPERATURE READS ON OneWire
   // Temperature variables.
   byte i;
@@ -201,7 +205,7 @@ void loop() {
 
   Serial.println(radiopacket);
 
-//TRANSMISSION
+//TRANSMISSION <-- <Turn this into a function.>
   delay(1000);  // Wait 1 second between transmits, could also 'sleep' here!
 
   Serial.print("Sending "); Serial.println(radiopacket);
