@@ -86,10 +86,15 @@ void setup() { // Setup, mostly radio stuff
 
 void loop(){
   Readtemp();
+
+  // <Insert> and transmit photoresistor read once trasmit radiopacket function is in place. analogRead(lightPin)
+  Serial.print("Photoresistor=");
+  Serial.println(analogRead(lightPin));
+
 }
 
 void Readtemp() {
-// <Insert> and transmit photoresistor read once trasmit radiopacket function is in place. analogRead(lightPin)
+
 // TEMPERATURE READS ON OneWire
   // Temperature variables.
   byte i;
