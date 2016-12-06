@@ -86,6 +86,7 @@ void setup() { // Setup, mostly radio stuff
 
 void loop(){
   Readtemp();
+  //photoresistor
 }
 
 void Readtemp() {
