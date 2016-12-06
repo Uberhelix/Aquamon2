@@ -53,7 +53,7 @@ OneWire  ds(10);  // on pin 10 (a 4.7K resistor is necessary)
 //For photoresistor
 int lightPin = A1;
 
-
+ asjdghsdf
 void setup() { // Setup, mostly radio stuff
 
   //  while (!Serial); // wait until serial console is open, remove if not tethered to computer. Delete this line on ESP8266
@@ -93,7 +93,7 @@ void loop(){
 
 }
 
-void Readtemp() {
+Readtemp() {
 
 // TEMPERATURE READS ON OneWire
   // Temperature variables.
@@ -206,6 +206,7 @@ void Readtemp() {
   radheader.concat("%NodeId=");
   radheader.concat(NODEID)+"%";
   String toradiopacket = radheader+"%Sensor="+ROM+"%"+"Data="+= celsius;
+
 
 //Building radiopacket
   int rpacketlen = toradiopacket.length()+1;
